@@ -91,8 +91,8 @@ describe 'WebSocketRails:', ->
 
     it 'should recreate existing channels, keeping their private/public type', ->
       @dispatcher.reconnect_channels()
-      expect(@dispatcher.channels['public 4chan'].is_public()).toEqual true
-      expect(@dispatcher.channels['private 4chan'].is_public()).toEqual false
+      expect(@dispatcher.channels['public 4chan'].is_private).toEqual false
+      expect(@dispatcher.channels['private 4chan'].is_private).toEqual true
 
     it 'should move all existing callbacks from old channel objects to new ones', ->
       old_public_channel = @dispatcher.channels['public 4chan']
