@@ -162,12 +162,17 @@ describe 'WebSocketRails:', ->
           @event = { run_callbacks: (data) -> }
           @event_mock = sinon.mock @event
           @dispatcher.queue[1] = @event
+          @event_data = [['event',@attributes]]
 
         it 'should run callbacks for result events', ->
-            data = [['event',@attributes]]
-            @event_mock.expects('run_callbacks').once()
-            @dispatcher.new_message data
-            @event_mock.verify()
+          @event_mock.expects('run_callbacks').once()
+          @dispatcher.new_message @event_data
+          @event_mock.verify()
+
+        it 'should remove the event from the queue', ->
+          @dispatcher.new_message @event_data
+          expect(@dispatcher.queue[1]).toBeUndefined()
+
 
   describe '.bind', ->
 
@@ -190,15 +195,20 @@ describe 'WebSocketRails:', ->
       @dispatcher._conn =
         connection_id: 123
         trigger: ->
-        trigger_channel: ->
 
     describe '.trigger', ->
+      it 'should add the event to the queue', ->
+        event = @dispatcher.trigger 'event', 'message'
+        expect(@dispatcher.queue[event.id]).toEqual event
 
       it 'should delegate to the connection object', ->
-        con_trigger = sinon.spy @dispatcher._conn, 'trigger'
+        conn_trigger = sinon.spy @dispatcher._conn, 'trigger'
         @dispatcher.trigger 'event', 'message'
-        event = new WebSocketRails.Event ['websocket_rails.subscribe', {channel: 'awesome'}, 123]
-        expect(con_trigger.called).toEqual true
+        expect(conn_trigger.called).toEqual true
+
+      it "should not delegate to the connection object, if it's not available", ->
+        @dispatcher._conn = null
+        @dispatcher.trigger 'event', 'message'
 
   describe '.connection_stale', ->
     describe 'when state is connected', ->
