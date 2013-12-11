@@ -15,10 +15,12 @@ module WebsocketRails
 
     def self.register_user(connection)
       singleton.register_user connection
+      singleton.info "User \##{connection.user_identifier} has connected"
     end
 
-    def self.destroy_user(connection)
-      singleton.destroy_user connection
+    def self.destroy_user(connection_identifier)
+      singleton.destroy_user connection_identifier
+      singleton.info "User \##{connection_identifier} has disconnected"
     end
 
     def self.publish(event)
