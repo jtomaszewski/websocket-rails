@@ -6,7 +6,9 @@ module WebsocketRails
       HttpHeaders = {
         'Content-Type'      => 'text/json',
         'Transfer-Encoding' => 'chunked',
-        'Access-Control-Allow-Origin' => '*'
+        'Access-Control-Allow-Origin' => '*',
+        'Access-Control-Allow-Headers' => 'Content-Type, Authorization, X-AUTH-TOKEN, Accept, Origin',
+        'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS'
       }
 
       def self.accepts?(env)

@@ -11,9 +11,15 @@ module WebsocketRails
 
     include Logging
 
-    SuccessfulResponse = [200,{'Content-Type' => 'text/plain'},['success']].freeze
-    BadRequestResponse = [400,{'Content-Type' => 'text/plain'},['invalid']].freeze
-    ExceptionResponse  = [500,{'Content-Type' => 'text/plain'},['exception']].freeze
+    _headers = {
+      'Content-Type' => 'text/plain',
+      'Access-Control-Allow-Origin' => '*',
+      'Access-Control-Allow-Headers' => 'Content-Type, Authorization, X-AUTH-TOKEN, Accept, Origin',
+      'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS'
+    }
+    SuccessfulResponse = [200, _headers, ['success']].freeze
+    BadRequestResponse = [400, _headers, ['invalid']].freeze
+    ExceptionResponse  = [500, _headers, ['exception']].freeze
 
     # Contains a Hash of currently open connections.
     # @return [Hash]
