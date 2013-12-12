@@ -5,7 +5,8 @@ module WebsocketRails
       TAIL = "0#{TERM}#{TERM}".freeze
       HttpHeaders = {
         'Content-Type'      => 'text/json',
-        'Transfer-Encoding' => 'chunked'
+        'Transfer-Encoding' => 'chunked',
+        'Access-Control-Allow-Origin' => '*'
       }
 
       def self.accepts?(env)
@@ -14,7 +15,7 @@ module WebsocketRails
 
       attr_accessor :headers
 
-      def initialize(env,dispatcher)
+      def initialize(env, dispatcher)
         super
         @body = DeferrableBody.new
         @headers = HttpHeaders
