@@ -49,15 +49,16 @@ class @WebSocketRails
   # - reconnect to all channels, that were active while disconnecting
   # - resend all events from which we haven't received any response yet
   reconnect: =>
-    old_connection_id = @_conn.connection_id
+    old_connection_id = @_conn?.connection_id
 
     @disconnect()
     @connect()
 
     # Resend all unfinished events from the previous connection.
-    for id, event of @queue
-      if event.connection_id == old_connection_id && !event.is_result()
-        @trigger_event event
+    if old_connection_id
+      for id, event of @queue
+        if event.connection_id == old_connection_id && !event.is_result()
+          @trigger_event event
 
     @reconnect_channels(false)
 
