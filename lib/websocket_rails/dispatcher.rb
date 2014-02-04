@@ -75,8 +75,12 @@ module WebsocketRails
     end
 
     def execute(actions)
-      actions.map do |action|
-        EM.next_tick { action.resume }
+      if Rails.env.test?
+        actions.map(&:resume)
+      else
+        actions.map do |action|
+          EM.next_tick { action.resume }
+        end
       end
     end
 
